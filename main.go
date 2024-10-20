@@ -8,11 +8,15 @@ import (
 	"addi/clients/telegram"
 )
 
+const (
+	tgBotHost = "api.telegram.org"
+)
+
 func main() {
 	token := mustToken()
 	fmt.Println("Token: ", token)
 
-	tgClient := telegram.New("host", token)
+	tgClient := telegram.New(tgBotHost, token)
 	fmt.Println(tgClient)
 
 	// fetcher = fetcher.New()
