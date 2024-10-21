@@ -18,7 +18,8 @@ const (
 
 func (p *Processor) doCmd(text string, chatID int, username string) error {
 	text = strings.TrimSpace(text)
-	log.Printf("got new command '%s' from '%s'", text, username)
+
+	log.Printf("got new command '%s' from '%s", text, username)
 
 	if isAddCmd(text) {
 		return p.savePage(chatID, text, username)
@@ -37,14 +38,13 @@ func (p *Processor) doCmd(text string, chatID int, username string) error {
 }
 
 func (p *Processor) savePage(chatID int, pageURL string, username string) (err error) {
-	defer func() {
-		err = e.WrapIfErr("can't do command 'save page'", err)
-	}()
+	defer func() { err = e.WrapIfErr("can't do command: save page", err) }()
 
 	page := &storage.Page{
 		URL:      pageURL,
 		UserName: username,
 	}
+
 	isExists, err := p.storage.IsExists(page)
 	if err != nil {
 		return err
@@ -65,7 +65,8 @@ func (p *Processor) savePage(chatID int, pageURL string, username string) (err e
 }
 
 func (p *Processor) sendRandom(chatID int, username string) (err error) {
-	defer func() { err = e.WrapIfErr("can't do command 'send random'", err) }()
+	defer func() { err = e.WrapIfErr("can't do command: can't send random", err) }()
+
 	page, err := p.storage.PickRandom(username)
 	if err != nil && !errors.Is(err, storage.ErrNoSavedPages) {
 		return err
@@ -95,5 +96,6 @@ func isAddCmd(text string) bool {
 
 func isURL(text string) bool {
 	u, err := url.Parse(text)
+
 	return err == nil && u.Host != ""
 }

@@ -39,7 +39,7 @@ func (p *Processor) Fetch(limit int) ([]events.Event, error) {
 	}
 
 	if len(updates) == 0 {
-		return nil, e.Wrap("no updates found", nil)
+		return nil, nil
 	}
 
 	res := make([]events.Event, 0, len(updates))
@@ -78,8 +78,9 @@ func (p *Processor) processMessage(event events.Event) error {
 func meta(event events.Event) (Meta, error) {
 	res, ok := event.Meta.(Meta)
 	if !ok {
-		return Meta{}, e.Wrap(("can't get meta"), ErrUnknownMetaType)
+		return Meta{}, e.Wrap("can't get meta", ErrUnknownMetaType)
 	}
+
 	return res, nil
 }
 
@@ -113,5 +114,6 @@ func fetchType(upd telegram.Update) events.Type {
 	if upd.Message == nil {
 		return events.Unknown
 	}
+
 	return events.Message
 }

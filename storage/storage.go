@@ -29,6 +29,7 @@ func (p Page) Hash() (string, error) {
 	if _, err := io.WriteString(h, p.URL); err != nil {
 		return "", e.Wrap("can't calculate hash", err)
 	}
+
 	if _, err := io.WriteString(h, p.UserName); err != nil {
 		return "", e.Wrap("can't calculate hash", err)
 	}
